@@ -1,0 +1,136 @@
+
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bloom Study — Ruang Belajar Mulya Delani</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-intro">
+      <div class="heading-row">
+        <div>
+          <p class="brand-kicker">RUANG BELAJAR MAHASISWA ITERA</p>
+          <h1>Bloom Study</h1>
+        </div>
+        <div class="student-profile" aria-label="Identitas mahasiswa">
+          <strong>Mulya Delani</strong>
+          <span>NIM 123140019</span>
+        </div>
+      </div>
+      <p class="tagline">Atur tugas, jaga fokus, dan tumbuh selangkah setiap hari.</p>
+      <div id="quote" class="quote" aria-live="polite">Memuat kutipan…</div>
+    </div>
+    <div class="clock">
+      <time id="clock">--:--</time>
+      <span id="date"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="col-main" aria-label="Daftar tugas">
+      <form id="task-form" class="form" autocomplete="off">
+        <h2 id="form-title">Tambah tugas</h2>
+        <label class="wide">Judul tugas
+          <input id="f-title" name="title" required maxlength="80" placeholder="mis. Laporan praktikum Kimia Dasar">
+        </label>
+        <label>Mata kuliah
+          <input id="f-course" name="course" maxlength="40" placeholder="mis. Pemrograman Web">
+        </label>
+        <label>Tenggat
+          <input id="f-deadline" name="deadline" type="date" required>
+        </label>
+        <label>Prioritas
+          <select id="f-priority" name="priority">
+            <option value="rendah">Rendah</option>
+            <option value="sedang" selected>Sedang</option>
+            <option value="tinggi">Tinggi</option>
+          </select>
+        </label>
+        <div class="actions wide">
+          <button type="submit" id="f-submit" class="btn primary">Tambah tugas</button>
+          <button type="button" id="f-cancel" class="btn" hidden>Batal</button>
+        </div>
+      </form>
+
+      <div class="toolbar">
+        <h2>Tugas saya</h2>
+        <div class="filters" role="group" aria-label="Filter tugas">
+          <button class="chip active" data-filter="semua">Semua</button>
+          <button class="chip" data-filter="aktif">Belum selesai</button>
+          <button class="chip" data-filter="selesai">Selesai</button>
+        </div>
+      </div>
+      <ul id="task-list" class="tasks"></ul>
+    </section>
+
+    <aside class="col-side">
+      <section class="next" aria-live="polite" id="next"></section>
+      <section class="card" id="stats"></section>
+      <section class="card weather" id="weather" aria-live="polite">Memuat cuaca…</section>
+      <p id="storage-message" class="notice" role="status" hidden></p>
+    </aside>
+  </main>
+
+  <section id="es6-module" class="module-section" aria-labelledby="module-title">
+    <div class="module-heading">
+      <div>
+        <p class="module-kicker">MODUL LATIHAN · JAVASCRIPT ES6+</p>
+        <h2 id="module-title">Belajar sambil praktik</h2>
+        <p class="module-intro">Pahami konsep JavaScript modern lewat ringkasan singkat dan demo yang bisa langsung dijalankan.</p>
+      </div>
+      <a class="module-jump" href="#module-demo">Mulai latihan <span aria-hidden="true">↓</span></a>
+    </div>
+
+    <div class="module-concepts">
+      <article class="concept-card">
+        <span class="concept-number">01</span>
+        <h3>let &amp; const</h3>
+        <p>Gunakan <code>let</code> untuk nilai yang dapat berubah dan <code>const</code> untuk referensi tetap. Keduanya memiliki block scope.</p>
+      </article>
+      <article class="concept-card">
+        <span class="concept-number">02</span>
+        <h3>Arrow functions</h3>
+        <p>Tulis fungsi dengan sintaks ringkas, misalnya <code>const kuadrat = angka =&gt; angka ** 2;</code>.</p>
+      </article>
+      <article class="concept-card">
+        <span class="concept-number">03</span>
+        <h3>Template literals</h3>
+        <p>Interpolasikan variabel memakai <code>${nilai}</code> dan buat string multi-baris menggunakan backtick.</p>
+      </article>
+    </div>
+
+    <section id="module-demo" class="module-demo" aria-labelledby="demo-title">
+      <div class="module-demo-heading">
+        <div>
+          <p class="module-kicker">COBA LANGSUNG</p>
+          <h3 id="demo-title">Jalankan demo ES6+</h3>
+        </div>
+        <button id="runBtn" type="button" class="btn primary">Run Demo</button>
+      </div>
+      <p class="module-hint">Demo membandingkan cara lama dan modern, termasuk contoh string multi-baris berbentuk HTML.</p>
+      <div id="output" class="module-output" aria-live="polite">
+        <p class="module-empty">Pilih <strong>Run Demo</strong> untuk menampilkan hasil latihan.</p>
+      </div>
+    </section>
+
+    <details class="module-challenge">
+      <summary>Latihan mandiri</summary>
+      <ol>
+        <li>Ubah nilai <code>const</code> dan amati error yang muncul.</li>
+        <li>Bandingkan jangkauan <code>var</code> dan <code>let</code> di dalam block.</li>
+        <li>Coba sintaks arrow function dengan jumlah parameter berbeda.</li>
+        <li>Tambahkan mata kuliah ke contoh template HTML multi-baris.</li>
+      </ol>
+    </details>
+  </section>
+
+  <footer class="footer">Dibuat untuk menemani hari-hari kuliah di ITERA.</footer>
+  <script src="script.js"></script>
+  <script src="modul/latihan-template-literals/js/app.js"></script>
+  <script src="modul/latihan-template-literals/js/main.js"></script>
+</body>
+</html>

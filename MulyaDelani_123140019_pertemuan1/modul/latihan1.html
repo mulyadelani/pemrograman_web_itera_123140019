@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan 1 - Dasar JavaScript & Kontrol Alur</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --bg: #fff0f3;
+            --card-bg: #ffffff;
+            --border: #ffccd5;
+            --text: #3a1523;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 850px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        header { background: #fff; padding: 20px; border-radius: 16px; border: 2px solid var(--border); box-shadow: 0 4px 15px rgba(255, 77, 109, 0.1); }
+        h1 { color: var(--primary); font-size: 24px; margin-bottom: 5px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 2px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .card h2 { font-size: 18px; color: var(--primary); margin-bottom: 12px; border-bottom: 2px dashed var(--border); padding-bottom: 6px; }
+        .input-group { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        input, select, button { padding: 10px 14px; font-family: inherit; font-size: 14px; border-radius: 8px; border: 1px solid var(--border); outline: none; }
+        input:focus, select:focus { border-color: var(--primary); }
+        button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #c9184a; }
+        .result-box { margin-top: 12px; padding: 12px; background: #fff5f7; border-radius: 8px; border-left: 4px solid var(--primary); font-weight: 500; font-size: 14px; }
+        pre { background: #3a1523; color: #ffb3c1; padding: 12px; border-radius: 8px; font-size: 13px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌸 Modul Latihan 1 - Dasar JavaScript & Kontrol Alur</h1>
+            <p><strong>Nama:</strong> Mulya Delani | <strong>NIM:</strong> 123140019 | <strong>Kelas:</strong> RA</p>
+        </header>
+
+        <!-- 1. Data Diri (const & let) -->
+        <div class="card">
+            <h2>1. Variable Data Diri (const & let)</h2>
+            <div id="data-diri-result" class="result-box"></div>
+        </div>
+
+        <!-- 2. Pengecekan Kelulusan -->
+        <div class="card">
+            <h2>2. Pengecekan Kelulusan (Nilai &ge; 70)</h2>
+            <div class="input-group">
+                <input type="number" id="input-nilai" placeholder="Masukkan nilai (0-100)" min="0" max="100" value="85">
+                <button onclick="cekKelulusan()">Cek Kelulusan</button>
+            </div>
+            <div id="kelulusan-result" class="result-box"></div>
+        </div>
+
+        <!-- 3. Kategori Umur -->
+        <div class="card">
+            <h2>3. Pengecekan Kategori Umur</h2>
+            <p style="font-size:12px; color:#666;">(Anak: &lt;12, Remaja: 12-17, Dewasa: 18-59, Lansia: &ge;60)</p>
+            <div class="input-group">
+                <input type="number" id="input-umur" placeholder="Masukkan umur" min="0" value="20">
+                <button onclick="cekKategoriUmur()">Cek Umur</button>
+            </div>
+            <div id="umur-result" class="result-box"></div>
+        </div>
+
+        <!-- 4. Switch Case Hari -->
+        <div class="card">
+            <h2>4. Konversi Angka Hari (1-7) ke Bahasa Inggris (Switch-Case)</h2>
+            <div class="input-group">
+                <select id="select-hari">
+                    <option value="1">1 - Monday</option>
+                    <option value="2">2 - Tuesday</option>
+                    <option value="3">3 - Wednesday</option>
+                    <option value="4">4 - Thursday</option>
+                    <option value="5">5 - Friday</option>
+                    <option value="6">6 - Saturday</option>
+                    <option value="7">7 - Sunday</option>
+                </select>
+                <button onclick="konversiHari()">Konversi Hari</button>
+            </div>
+            <div id="hari-result" class="result-box"></div>
+        </div>
+
+        <!-- 5. Kalkulator Grade Ternary -->
+        <div class="card">
+            <h2>5. Kalkulator Grade Nilai (Ternary Operator)</h2>
+            <div class="input-group">
+                <input type="number" id="input-grade-nilai" placeholder="Masukkan nilai" min="0" max="100" value="92">
+                <button onclick="hitungGradeTernary()">Hitung Grade</button>
+            </div>
+            <div id="grade-result" class="result-box"></div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Data Diri Variabel const & let
+        const NAMA = "Mulya Delani";
+        const NIM = "123140019";
+        let umur = 20;
+        let kotaAsal = "Bandar Lampung";
+
+        document.getElementById('data-diri-result').innerHTML = `
+            <strong>Nama (const):</strong> ${NAMA} <br>
+            <strong>NIM (const):</strong> ${NIM} <br>
+            <strong>Umur (let):</strong> ${umur} tahun <br>
+            <strong>Kota Asal (let):</strong> ${kotaAsal}
+        `;
+        console.log("Data Diri:", { NAMA, NIM, umur, kotaAsal });
+
+        // 2. Pengecekan Kelulusan (syarat nilai >= 70)
+        function cekKelulusan() {
+            const nilai = parseFloat(document.getElementById('input-nilai').value);
+            const status = (nilai >= 70) ? "LULUS 🎉" : "TIDAK LULUS ❌";
+            document.getElementById('kelulusan-result').innerHTML = 
+                `Nilai: <strong>${nilai}</strong> &rarr; Status: <strong>${status}</strong> (Syarat Lulus &ge; 70)`;
+        }
+        cekKelulusan();
+
+        // 3. Kategori Umur
+        function cekKategoriUmur() {
+            const age = parseInt(document.getElementById('input-umur').value);
+            let kategori = "";
+
+            if (isNaN(age) || age < 0) {
+                kategori = "Umur tidak valid!";
+            } else if (age < 12) {
+                kategori = "Anak-anak 👶";
+            } else if (age <= 17) {
+                kategori = "Remaja 🧒";
+            } else if (age <= 59) {
+                kategori = "Dewasa 🧑";
+            } else {
+                kategori = "Lansia 🧓";
+            }
+
+            document.getElementById('umur-result').innerHTML = 
+                `Umur: <strong>${age} tahun</strong> &rarr; Kategori: <strong>${kategori}</strong>`;
+        }
+        cekKategoriUmur();
+
+        // 4. Switch-case Konversi Hari
+        function konversiHari() {
+            const dayNum = parseInt(document.getElementById('select-hari').value);
+            let dayName = "";
+
+            switch (dayNum) {
+                case 1: dayName = "Monday (Senin)"; break;
+                case 2: dayName = "Tuesday (Selasa)"; break;
+                case 3: dayName = "Wednesday (Rabu)"; break;
+                case 4: dayName = "Thursday (Kamis)"; break;
+                case 5: dayName = "Friday (Jumat)"; break;
+                case 6: dayName = "Saturday (Sabtu)"; break;
+                case 7: dayName = "Sunday (Minggu)"; break;
+                default: dayName = "Invalid Day Number!"; break;
+            }
+
+            document.getElementById('hari-result').innerHTML = 
+                `Angka Hari: <strong>${dayNum}</strong> &rarr; Nama Hari: <strong>${dayName}</strong>`;
+        }
+        konversiHari();
+
+        // 5. Grade Nilai Ternary Operator
+        function hitungGradeTernary() {
+            const score = parseFloat(document.getElementById('input-grade-nilai').value);
+            
+            const grade = (score >= 90) ? 'A (Sangat Baik)' :
+                          (score >= 80) ? 'B (Baik)' :
+                          (score >= 70) ? 'C (Cukup)' :
+                          (score >= 60) ? 'D (Kurang)' : 'E (Gagal)';
+
+            document.getElementById('grade-result').innerHTML = 
+                `Nilai: <strong>${score}</strong> &rarr; Grade (Ternary): <strong>${grade}</strong>`;
+        }
+        hitungGradeTernary();
+    </script>
+</body>
+</html>

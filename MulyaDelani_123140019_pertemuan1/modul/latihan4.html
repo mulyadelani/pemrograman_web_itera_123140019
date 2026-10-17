@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan 4 - API Integration, LocalStorage, Dark Mode & Todo List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fff0f3;
+            --card-bg: #ffffff;
+            --border-color: #ffccd5;
+            --text-color: #3a1523;
+            --primary-pink: #ff4d6d;
+            --accent-box: #fff5f7;
+        }
+
+        body.dark-mode {
+            --bg-color: #1a0910;
+            --card-bg: #2a121c;
+            --border-color: #590d22;
+            --text-color: #ffe5ec;
+            --primary-pink: #ff758f;
+            --accent-box: #3d1726;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-color); padding: 20px; transition: background 0.3s, color 0.3s; }
+        .container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+        
+        header { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 2px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        h1 { color: var(--primary-pink); font-size: 22px; }
+        
+        .btn-theme-toggle { background: var(--primary-pink); color: white; border: none; padding: 10px 16px; border-radius: 50px; font-weight: 600; cursor: pointer; }
+        
+        .card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 2px solid var(--border-color); }
+        .card h2 { font-size: 18px; color: var(--primary-pink); margin-bottom: 12px; border-bottom: 2px dashed var(--border-color); padding-bottom: 6px; }
+
+        .input-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+        input, button { padding: 10px 14px; font-family: inherit; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-color); outline: none; background: var(--card-bg); color: var(--text-color); }
+        input:focus { border-color: var(--primary-pink); }
+        button.btn-primary { background: var(--primary-pink); color: white; border: none; font-weight: 600; cursor: pointer; }
+        button.btn-primary:hover { opacity: 0.9; }
+
+        /* Error feedback */
+        .error-text { color: #e63946; font-size: 12px; margin-top: -6px; margin-bottom: 8px; display: none; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; border: 1px solid var(--border-color); }
+        th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background: var(--accent-box); color: var(--primary-pink); }
+
+        /* Posts API List */
+        .post-item { background: var(--accent-box); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+        .post-title { font-weight: 600; color: var(--primary-pink); text-transform: capitalize; margin-bottom: 4px; }
+        .post-body { font-size: 12px; opacity: 0.9; }
+        .pagination-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+
+        /* Todo List */
+        .todo-item { display: flex; justify-content: space-between; align-items: center; background: var(--accent-box); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; }
+        .todo-item.completed span { text-decoration: line-through; opacity: 0.6; }
+        .todo-actions { display: flex; gap: 6px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header & Dark Mode Toggle -->
+        <header>
+            <div>
+                <h1>🌸 Modul Latihan 4 - API, LocalStorage & Dark Mode</h1>
+                <p style="font-size: 13px;"><strong>Nama:</strong> Mulya Delani | <strong>NIM:</strong> 123140019 | <strong>Kelas:</strong> RA</p>
+            </div>
+            <button class="btn-theme-toggle" id="btn-toggle-dark">🌙 Dark Mode</button>
+        </header>
+
+        <!-- 1 & 2. Data Mahasiswa LocalStorage dengan Validasi -->
+        <div class="card">
+            <h2>1 & 2. Data Mahasiswa Persisten (LocalStorage + Validasi Form)</h2>
+            <form id="form-mhs-storage" style="display:flex; flex-direction:column; gap:10px;">
+                <div class="input-group">
+                    <input type="text" id="mhs-nama" placeholder="Nama Mahasiswa (min 3 kar)" required style="flex:1;">
+                    <input type="text" id="mhs-nim" placeholder="NIM" required style="flex:1;">
+                    <input type="number" id="mhs-nilai" placeholder="Nilai (0-100)" min="0" max="100" required style="flex:1;">
+                    <button type="submit" class="btn-primary">Tambah ke LocalStorage</button>
+                </div>
+                <div id="mhs-error" class="error-text"></div>
+            </form>
+
+            <table id="table-mhs-storage">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>NIM</th>
+                        <th>Nama</th>
+                        <th>Nilai</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="mhs-storage-tbody"></tbody>
+            </table>
+        </div>
+
+        <!-- 3, 4 & 5. API Fetch Posts, Search Filter & Pagination -->
+        <div class="card">
+            <h2>3 & 5. Integrasi API Posts (Search Filter & Pagination)</h2>
+            <div class="input-group">
+                <input type="text" id="input-search-post" placeholder="Cari postingan berdasarkan judul..." style="flex:1;">
+            </div>
+            <div id="posts-container">
+                <!-- Posts dynamic -->
+            </div>
+            <div class="pagination-controls">
+                <button id="btn-prev-page" class="btn-primary" disabled>&laquo; Previous</button>
+                <span id="page-indicator" style="font-size:13px; font-weight:600;">Page 1 of 1</span>
+                <button id="btn-next-page" class="btn-primary">Next &raquo;</button>
+            </div>
+        </div>
+
+        <!-- 6. Todo List App -->
+        <div class="card">
+            <h2>6. Aplikasi Todo List Sederhana (LocalStorage)</h2>
+            <div class="input-group">
+                <input type="text" id="input-todo" placeholder="Tulis tugas baru..." style="flex:1;">
+                <button id="btn-add-todo" class="btn-primary">Tambah Tugas</button>
+            </div>
+            <div id="todo-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // --------------------------------------------------------------------
+        // 4. Dark Mode Toggle (Manipulasi CSS Class)
+        // --------------------------------------------------------------------
+        const btnToggleDark = document.getElementById('btn-toggle-dark');
+        const isDarkMode = localStorage.getItem('latihan4_dark_mode') === 'true';
+
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            btnToggleDark.textContent = '☀️ Light Mode';
+        }
+
+        btnToggleDark.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const activeDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('latihan4_dark_mode', activeDark);
+            btnToggleDark.textContent = activeDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        });
+
+        // --------------------------------------------------------------------
+        // 1 & 2. Form Input Mahasiswa + LocalStorage + Validasi
+        // --------------------------------------------------------------------
+        const STORAGE_KEY_MHS = 'latihan4_mahasiswa_data';
+        let storageMhsList = JSON.parse(localStorage.getItem(STORAGE_KEY_MHS)) || [
+            { nim: '123140019', nama: 'Mulya Delani', nilai: 95 }
+        ];
+
+        const formMhsStorage = document.getElementById('form-mhs-storage');
+        const mhsError = document.getElementById('mhs-error');
+
+        function renderStorageMhs() {
+            const tbody = document.getElementById('mhs-storage-tbody');
+            tbody.innerHTML = '';
+            storageMhsList.forEach((mhs, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${idx + 1}</td>
+                    <td>${mhs.nim}</td>
+                    <td><strong>${mhs.nama}</strong></td>
+                    <td>${mhs.nilai}</td>
+                    <td><button onclick="hapusMhsStorage(${idx})" style="background:#e63946; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Hapus</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            localStorage.setItem(STORAGE_KEY_MHS, JSON.stringify(storageMhsList));
+        }
+
+        formMhsStorage.addEventListener('submit', (e) => {
+            e.preventDefault();
+            mhsError.style.display = 'none';
+
+            const nama = document.getElementById('mhs-nama').value.trim();
+            const nim = document.getElementById('mhs-nim').value.trim();
+            const nilai = parseFloat(document.getElementById('mhs-nilai').value);
+
+            // Validasi
+            if (nama.length < 3) {
+                mhsError.textContent = '⚠️ Nama mahasiswa minimal 3 karakter!';
+                mhsError.style.display = 'block';
+                return;
+            }
+            if (!nim) {
+                mhsError.textContent = '⚠️ NIM wajib diisi!';
+                mhsError.style.display = 'block';
+                return;
+            }
+
+            storageMhsList.push({ nim, nama, nilai });
+            renderStorageMhs();
+            formMhsStorage.reset();
+        });
+
+        function hapusMhsStorage(index) {
+            storageMhsList.splice(index, 1);
+            renderStorageMhs();
+        }
+
+        renderStorageMhs();
+
+        // --------------------------------------------------------------------
+        // 3 & 5. API Fetch Posts + Search + Pagination
+        // --------------------------------------------------------------------
+        let allPosts = [];
+        let filteredPosts = [];
+        let currentPage = 1;
+        const postsPerPage = 4;
+
+        const postsContainer = document.getElementById('posts-container');
+        const searchInput = document.getElementById('input-search-post');
+        const btnPrevPage = document.getElementById('btn-prev-page');
+        const btnNextPage = document.getElementById('btn-next-page');
+        const pageIndicator = document.getElementById('page-indicator');
+
+        async function fetchPosts() {
+            try {
+                postsContainer.innerHTML = '<p style="font-size:13px;">Memuat postingan dari API...</p>';
+                const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+                allPosts = await res.json();
+                filteredPosts = [...allPosts];
+                renderPosts();
+            } catch (err) {
+                postsContainer.innerHTML = '<p style="color:#e63946;">Gagal memuat data dari API!</p>';
+            }
+        }
+
+        function renderPosts() {
+            postsContainer.innerHTML = '';
+
+            const totalPages = Math.ceil(filteredPosts.length / postsPerPage) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * postsPerPage;
+            const pageData = filteredPosts.slice(startIndex, startIndex + postsPerPage);
+
+            if (pageData.length === 0) {
+                postsContainer.innerHTML = '<p style="font-size:13px; opacity:0.7;">Postingan tidak ditemukan.</p>';
+            } else {
+                pageData.forEach(post => {
+                    const div = document.createElement('div');
+                    div.className = 'post-item';
+                    div.innerHTML = `
+                        <div class="post-title">#${post.id} - ${post.title}</div>
+                        <div class="post-body">${post.body}</div>
+                    `;
+                    postsContainer.appendChild(div);
+                });
+            }
+
+            pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+            btnPrevPage.disabled = currentPage === 1;
+            btnNextPage.disabled = currentPage === totalPages || totalPages === 0;
+        }
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase().trim();
+            filteredPosts = allPosts.filter(p => p.title.toLowerCase().includes(query));
+            currentPage = 1;
+            renderPosts();
+        });
+
+        btnPrevPage.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPosts();
+            }
+        });
+
+        btnNextPage.addEventListener('click', () => {
+            const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPosts();
+            }
+        });
+
+        fetchPosts();
+
+        // --------------------------------------------------------------------
+        // 6. Todo List Sederhana (LocalStorage)
+        // --------------------------------------------------------------------
+        const STORAGE_KEY_TODO = 'latihan4_todos_data';
+        let todoList = JSON.parse(localStorage.getItem(STORAGE_KEY_TODO)) || [
+            { id: 1, text: 'Menyelesaikan Tugas PAW Pertemuan 1', completed: true },
+            { id: 2, text: 'Mempelajari LocalStorage & DOM Manipulation', completed: false }
+        ];
+
+        const todoContainer = document.getElementById('todo-container');
+        const inputTodo = document.getElementById('input-todo');
+        const btnAddTodo = document.getElementById('btn-add-todo');
+
+        function renderTodos() {
+            todoContainer.innerHTML = '';
+            if (todoList.length === 0) {
+                todoContainer.innerHTML = '<p style="font-size:12px; opacity:0.7;">Belum ada tugas.</p>';
+            }
+            todoList.forEach(todo => {
+                const div = document.createElement('div');
+                div.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                div.innerHTML = `
+                    <span>${todo.text}</span>
+                    <div class="todo-actions">
+                        <button onclick="toggleTodo(${todo.id})" style="background:${todo.completed ? '#2a9d8f' : '#ffb3c1'}; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">
+                            ${todo.completed ? 'Selesai ✓' : 'Tandai Selesai'}
+                        </button>
+                        <button onclick="deleteTodo(${todo.id})" style="background:#e63946; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">
+                            Hapus
+                        </button>
+                    </div>
+                `;
+                todoContainer.appendChild(div);
+            });
+            localStorage.setItem(STORAGE_KEY_TODO, JSON.stringify(todoList));
+        }
+
+        btnAddTodo.addEventListener('click', () => {
+            const text = inputTodo.value.trim();
+            if (!text) return;
+            todoList.push({
+                id: Date.now(),
+                text,
+                completed: false
+            });
+            inputTodo.value = '';
+            renderTodos();
+        });
+
+        function toggleTodo(id) {
+            const todo = todoList.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                renderTodos();
+            }
+        }
+
+        function deleteTodo(id) {
+            todoList = todoList.filter(t => t.id !== id);
+            renderTodos();
+        }
+
+        renderTodos();
+    </script>
+</body>
+</html>

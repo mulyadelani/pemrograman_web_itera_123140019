@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Latihan membandingkan concatenation dan template literals di JavaScript ES6+.">
+  <title>Latihan Template Literals — Bloom Study</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <a class="back-link" href="../../index.html">← Kembali ke Bloom Study</a>
+
+    <header class="hero">
+      <p class="eyebrow">MODUL LATIHAN · JAVASCRIPT ES6+</p>
+      <h1>Template Literals</h1>
+      <p>Bandingkan cara lama merangkai string dengan cara modern yang lebih rapi dan mudah dibaca.</p>
+    </header>
+
+    <section class="lesson" aria-labelledby="syntax-title">
+      <h2 id="syntax-title">Sintaks dasar</h2>
+      <div class="comparison">
+        <article>
+          <h3>Concatenation</h3>
+          <pre><code>const greeting = "Halo, " + name + "!";</code></pre>
+          <p>Menggabungkan potongan teks dan variabel dengan operator <code>+</code>.</p>
+        </article>
+        <article>
+          <h3>Template literal</h3>
+          <pre><code>const greeting = `Halo, ${name}!`;</code></pre>
+          <p>Gunakan backtick dan sisipkan variabel atau ekspresi dengan <code>${...}</code>.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="lesson" aria-labelledby="practice-title">
+      <div class="practice-heading">
+        <div>
+          <p class="eyebrow">COBA LANGSUNG</p>
+          <h2 id="practice-title">Jalankan demo ES6+</h2>
+        </div>
+        <button id="runBtn" type="button">Run Demo</button>
+      </div>
+      <p class="hint">Demo menampilkan let/const, arrow functions, dan template literals, termasuk string multi-baris serta ekspresi tahun lahir.</p>
+      <div id="output" class="output" aria-live="polite">
+        <p class="empty">Klik <strong>Run Demo</strong> untuk menampilkan hasil latihan.</p>
+      </div>
+    </section>
+
+    <section class="lesson challenge" aria-labelledby="challenge-title">
+      <h2 id="challenge-title">Latihan mandiri</h2>
+      <ol>
+        <li>Coba ubah nilai <code>const</code> dan bandingkan perilaku <code>var</code> di dalam maupun di luar block.</li>
+        <li>Buat arrow function dengan beberapa variasi parameter dan sintaks.</li>
+        <li>Ubah nama dan umur pada <code>demoTemplateLiterals()</code>, lalu bandingkan hasil concatenation dan template literal.</li>
+        <li>Tambahkan properti, seperti mata kuliah, ke string HTML multi-baris.</li>
+        <li>Ubah ekspresi perhitungan tahun lahir dan jalankan demo kembali.</li>
+      </ol>
+    </section>
+
+    <footer>Latihan JavaScript ES6+ · Mulya Delani · 123140019</footer>
+  </main>
+  <script src="js/app.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

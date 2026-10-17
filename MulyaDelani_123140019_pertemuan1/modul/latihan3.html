@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan 3 - Array, Object & Management Data (CRUD)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --bg: #fff0f3;
+            --card-bg: #ffffff;
+            --border: #ffccd5;
+            --text: #3a1523;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        header { background: #fff; padding: 20px; border-radius: 16px; border: 2px solid var(--border); box-shadow: 0 4px 15px rgba(255, 77, 109, 0.1); }
+        h1 { color: var(--primary); font-size: 24px; margin-bottom: 5px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 2px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .card h2 { font-size: 18px; color: var(--primary); margin-bottom: 12px; border-bottom: 2px dashed var(--border); padding-bottom: 6px; }
+        
+        .form-crud { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        input, select, button { padding: 10px; font-family: inherit; font-size: 13px; border-radius: 8px; border: 1px solid var(--border); outline: none; }
+        input:focus { border-color: var(--primary); }
+        button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #c9184a; }
+        .btn-secondary { background: #ffb3c1; color: var(--text); }
+        .btn-secondary:hover { background: #ff758f; color: white; }
+        .btn-danger { background: #e63946; }
+        .btn-danger:hover { background: #b71c1c; }
+        .btn-warning { background: #f4a261; color: white; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13.5px; background: white; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #ffe5ec; }
+        th { background: #fff0f3; color: var(--primary); font-weight: 600; }
+        tr:hover { background: #fff5f7; }
+
+        .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+        .stat-box { background: #fff5f7; padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary); font-size: 13px; margin-top: 12px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌸 Modul Latihan 3 - Array, Object & CRUD Data Mahasiswa</h1>
+            <p><strong>Nama:</strong> Mulya Delani | <strong>NIM:</strong> 123140019 | <strong>Kelas:</strong> RA</p>
+        </header>
+
+        <!-- Form Tambah / Edit Mahasiswa (CRUD) -->
+        <div class="card">
+            <h2 id="form-title">Tambah / Edit Data Mahasiswa</h2>
+            <form id="student-form" class="form-crud">
+                <input type="hidden" id="edit-id">
+                <input type="text" id="input-nama" placeholder="Nama Mahasiswa" required>
+                <input type="text" id="input-nim" placeholder="NIM" required>
+                <input type="text" id="input-jurusan" placeholder="Jurusan" required>
+                <input type="number" id="input-nilai" placeholder="Nilai (0-100)" min="0" max="100" required>
+                <button type="submit" id="btn-submit-mhs">Simpan Mahasiswa</button>
+                <button type="button" id="btn-cancel-edit" class="btn-secondary" style="display:none;">Batal Edit</button>
+            </form>
+        </div>
+
+        <!-- Tabel & Pengurutan & Filter -->
+        <div class="card">
+            <h2>Daftar Data Mahasiswa & Analisis Array</h2>
+            
+            <div class="toolbar">
+                <button id="btn-sort-asc" class="btn-secondary">Sort Nama (A-Z)</button>
+                <button id="btn-sort-desc" class="btn-secondary">Sort Nama (Z-A)</button>
+                <button id="btn-show-all">Tampilkan Semua</button>
+                <button id="btn-filter-above-avg" class="btn-warning">Filter &gt; Rata-Rata</button>
+            </div>
+
+            <table id="table-mahasiswa">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>NIM</th>
+                        <th>Nama</th>
+                        <th>Jurusan</th>
+                        <th>Nilai</th>
+                        <th>Status Rata-Rata</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+
+            <!-- Analisis statistik array -->
+            <div id="stat-analysis" class="stat-box"></div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Initial Array Minimum 5 Object Mahasiswa
+        let mahasiswaList = [
+            { id: "1", nim: "123140019", nama: "Mulya Delani", jurusan: "Teknik Informatika", nilai: 95 },
+            { id: "2", nim: "123140002", nama: "Ahmad Rizky", jurusan: "Teknik Informatika", nilai: 78 },
+            { id: "3", nim: "123140015", nama: "Budi Santoso", jurusan: "Sistem Informasi", nilai: 65 },
+            { id: "4", nim: "123140028", nama: "Citra Dewi", jurusan: "Teknik Elektro", nilai: 88 },
+            { id: "5", nim: "123140040", nama: "Dina Permata", jurusan: "Teknik Informatika", nilai: 82 }
+        ];
+
+        let currentFilter = 'all'; // 'all' or 'above_avg'
+
+        // Render Table & Statistics
+        function renderTable(dataToRender = mahasiswaList) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            const avg = calculateAverage();
+
+            dataToRender.forEach((mhs, index) => {
+                const tr = document.createElement('tr');
+                const isAboveAvg = mhs.nilai > avg;
+                
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${mhs.nim}</td>
+                    <td><strong>${mhs.nama}</strong></td>
+                    <td>${mhs.jurusan}</td>
+                    <td><strong>${mhs.nilai}</strong></td>
+                    <td><span style="color: ${isAboveAvg ? '#2a9d8f' : '#e63946'}; font-weight: 600;">
+                        ${isAboveAvg ? '✨ Di atas Rata-rata' : 'Di bawah Rata-rata'}
+                    </span></td>
+                    <td>
+                        <button onclick="editMahasiswa('${mhs.id}')" class="btn-warning" style="padding:4px 8px; font-size:11px;">Edit</button>
+                        <button onclick="deleteMahasiswa('${mhs.id}')" class="btn-danger" style="padding:4px 8px; font-size:11px;">Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            updateAnalysis();
+        }
+
+        // 2. Hitung Rata-Rata
+        function calculateAverage() {
+            if (mahasiswaList.length === 0) return 0;
+            const sum = mahasiswaList.reduce((acc, mhs) => acc + mhs.nilai, 0);
+            return sum / mahasiswaList.length;
+        }
+
+        // 3. Mahasiswa Nilai Tertinggi & Statistik Array
+        function updateAnalysis() {
+            const statBox = document.getElementById('stat-analysis');
+            if (mahasiswaList.length === 0) {
+                statBox.innerHTML = "Belum ada data mahasiswa.";
+                return;
+            }
+
+            const avg = calculateAverage().toFixed(2);
+
+            // Mahasiswa nilai tertinggi dengan method array reduce
+            const highest = mahasiswaList.reduce((max, mhs) => (mhs.nilai > max.nilai ? mhs : max), mahasiswaList[0]);
+
+            // Filter mahasiswa di atas rata-rata
+            const aboveAvgList = mahasiswaList.filter(mhs => mhs.nilai > parseFloat(avg));
+
+            statBox.innerHTML = `
+                📌 <strong>Total Mahasiswa:</strong> ${mahasiswaList.length} orang <br>
+                📊 <strong>Rata-Rata Nilai:</strong> ${avg} <br>
+                🏆 <strong>Nilai Tertinggi:</strong> ${highest.nama} (${highest.nim}) - Nilai: <strong>${highest.nilai}</strong> (${highest.jurusan}) <br>
+                🌟 <strong>Jumlah di atas Rata-Rata:</strong> ${aboveAvgList.length} mahasiswa
+            `;
+        }
+
+        // 4. Sort Nama Ascending / Descending
+        document.getElementById('btn-sort-asc').addEventListener('click', () => {
+            mahasiswaList.sort((a, b) => a.nama.localeCompare(b.nama));
+            renderTable();
+        });
+
+        document.getElementById('btn-sort-desc').addEventListener('click', () => {
+            mahasiswaList.sort((a, b) => b.nama.localeCompare(a.nama));
+            renderTable();
+        });
+
+        // Filter & Show All
+        document.getElementById('btn-show-all').addEventListener('click', () => {
+            currentFilter = 'all';
+            renderTable(mahasiswaList);
+        });
+
+        document.getElementById('btn-filter-above-avg').addEventListener('click', () => {
+            currentFilter = 'above_avg';
+            const avg = calculateAverage();
+            const filtered = mahasiswaList.filter(mhs => mhs.nilai > avg);
+            renderTable(filtered);
+        });
+
+        // 5. CRUD: Create & Update
+        const studentForm = document.getElementById('student-form');
+        const editIdInput = document.getElementById('edit-id');
+        const btnCancelEdit = document.getElementById('btn-cancel-edit');
+
+        studentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const editId = editIdInput.value;
+            const nama = document.getElementById('input-nama').value.trim();
+            const nim = document.getElementById('input-nim').value.trim();
+            const jurusan = document.getElementById('input-jurusan').value.trim();
+            const nilai = parseFloat(document.getElementById('input-nilai').value);
+
+            if (editId) {
+                // UPDATE
+                const index = mahasiswaList.findIndex(m => m.id === editId);
+                if (index !== -1) {
+                    mahasiswaList[index] = { id: editId, nim, nama, jurusan, nilai };
+                }
+            } else {
+                // CREATE
+                const newMhs = {
+                    id: Date.now().toString(),
+                    nim, nama, jurusan, nilai
+                };
+                mahasiswaList.push(newMhs);
+            }
+
+            resetForm();
+            renderTable();
+        });
+
+        function editMahasiswa(id) {
+            const mhs = mahasiswaList.find(m => m.id === id);
+            if (!mhs) return;
+            editIdInput.value = mhs.id;
+            document.getElementById('input-nama').value = mhs.nama;
+            document.getElementById('input-nim').value = mhs.nim;
+            document.getElementById('input-jurusan').value = mhs.jurusan;
+            document.getElementById('input-nilai').value = mhs.nilai;
+            
+            document.getElementById('form-title').textContent = "Edit Data Mahasiswa";
+            document.getElementById('btn-submit-mhs').textContent = "Update Data";
+            btnCancelEdit.style.display = "inline-block";
+        }
+
+        function deleteMahasiswa(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus data mahasiswa ini?")) {
+                mahasiswaList = mahasiswaList.filter(m => m.id !== id);
+                renderTable();
+            }
+        }
+
+        function resetForm() {
+            studentForm.reset();
+            editIdInput.value = '';
+            document.getElementById('form-title').textContent = "Tambah / Edit Data Mahasiswa";
+            document.getElementById('btn-submit-mhs').textContent = "Simpan Mahasiswa";
+            btnCancelEdit.style.display = "none";
+        }
+
+        btnCancelEdit.addEventListener('click', resetForm);
+
+        // Initial Load
+        renderTable();
+    </script>
+</body>
+</html>

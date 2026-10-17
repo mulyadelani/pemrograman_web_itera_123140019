@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinky POS - Aplikasi Kasir & Keranjang Belanja Kantin</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Sparkles / Decorative Elements -->
+    <div class="bg-decorations">
+        <span class="bubble b1"></span>
+        <span class="bubble b2"></span>
+        <span class="bubble b3"></span>
+        <span class="bubble b4"></span>
+    </div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header">
+            <div class="brand-title">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <div>
+                    <h1>Pinky POS <span class="badge-cute">Kantin Kampus</span></h1>
+                    <p class="subtitle">Sistem Kasir & Keranjang Belanja Sederhana</p>
+                </div>
+            </div>
+            
+            <div class="cashier-info">
+                <div class="info-card">
+                    <i class="fa-solid fa-user-check"></i>
+                    <div>
+                        <span class="label">Kasir Aktif:</span>
+                        <strong id="cashier-name">Mulya Delani</strong>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-id-card"></i>
+                    <div>
+                        <span class="label">NIM & Kelas:</span>
+                        <strong>123140019 - RA</strong>
+                    </div>
+                </div>
+                <div class="info-card time-card">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="live-clock">00:00:00 WIB</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Layout Content -->
+        <main class="pos-layout">
+            <!-- Left Column: Form Input Barang & Presets -->
+            <section class="panel panel-input">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-cart-plus"></i> Input Barang Belanja</h2>
+                    <span class="panel-subtitle">Tambahkan produk ke keranjang</span>
+                </div>
+
+                <!-- Quick Presets for Cashier Convenience -->
+                <div class="preset-section">
+                    <label class="preset-label"><i class="fa-solid fa-bolt"></i> Quick Menu Kantin:</label>
+                    <div class="preset-tags">
+                        <button type="button" class="btn-preset" data-name="Nasi Goreng Kantin" data-price="15000">
+                            🍚 Nasgor (15rb)
+                        </button>
+                        <button type="button" class="btn-preset" data-name="Es Teh Manis" data-price="4000">
+                            🥤 Es Teh (4rb)
+                        </button>
+                        <button type="button" class="btn-preset" data-name="Buku Tulis A5" data-price="6500">
+                            📓 Buku A5 (6.5rb)
+                        </button>
+                        <button type="button" class="btn-preset" data-name="Ayam Geprek" data-price="18000">
+                            🍗 Geprek (18rb)
+                        </button>
+                        <button type="button" class="btn-preset" data-name="Air Mineral 600ml" data-price="3500">
+                            💧 Air Mineral (3.5rb)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Form Input -->
+                <form id="form-barang" class="form-cute" novalidate>
+                    <!-- Input Nama Barang -->
+                    <div class="form-group" id="group-nama">
+                        <label for="nama-barang">
+                            <i class="fa-solid fa-tag"></i> Nama Barang <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nama-barang" 
+                            name="namaBarang" 
+                            placeholder="Contoh: Buku Tulis, Air Mineral"
+                            autocomplete="off"
+                        >
+                        <small class="error-msg" id="error-nama-barang"></small>
+                    </div>
+
+                    <!-- Input Harga Satuan -->
+                    <div class="form-group" id="group-harga">
+                        <label for="harga-satuan">
+                            <i class="fa-solid fa-coins"></i> Harga Satuan (Rp) <span class="required">*</span>
+                        </label>
+                        <div class="input-currency-wrapper">
+                            <span class="currency-symbol">Rp</span>
+                            <input 
+                                type="number" 
+                                id="harga-satuan" 
+                                name="hargaSatuan" 
+                                placeholder="Min. 500"
+                                min="500"
+                                step="100"
+                            >
+                        </div>
+                        <small class="error-msg" id="error-harga-satuan"></small>
+                    </div>
+
+                    <!-- Input Jumlah / Qty -->
+                    <div class="form-group" id="group-qty">
+                        <label for="qty-barang">
+                            <i class="fa-solid fa-boxes-stacked"></i> Jumlah / Qty <span class="required">*</span>
+                        </label>
+                        <div class="qty-control">
+                            <button type="button" class="btn-qty-minus" id="btn-qty-minus"><i class="fa-solid fa-minus"></i></button>
+                            <input 
+                                type="number" 
+                                id="qty-barang" 
+                                name="qtyBarang" 
+                                value="1"
+                                min="1"
+                            >
+                            <button type="button" class="btn-qty-plus" id="btn-qty-plus"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                        <small class="error-msg" id="error-qty-barang"></small>
+                    </div>
+
+                    <!-- Subtotal Preview for Form -->
+                    <div class="subtotal-live-preview">
+                        <span>Estimasi Subtotal:</span>
+                        <strong id="live-subtotal">Rp 0</strong>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-primary" id="btn-submit">
+                        <i class="fa-solid fa-circle-plus"></i> Tambah ke Keranjang
+                    </button>
+                </form>
+            </section>
+
+            <!-- Right Column: Cart Table & Summary Calculator -->
+            <section class="panel panel-cart">
+                <div class="panel-header header-cart-flex">
+                    <div>
+                        <h2><i class="fa-solid fa-basket-shopping"></i> Daftar Keranjang Belanja</h2>
+                        <span class="panel-subtitle">Kelola item dan hitung pembayaran</span>
+                    </div>
+                    <span class="item-count-badge" id="cart-item-count">0 Item</span>
+                </div>
+
+                <!-- Table Container -->
+                <div class="table-responsive">
+                    <table class="table-cute" id="table-keranjang">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Barang</th>
+                                <th>Harga Satuan</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-table-body">
+                            <!-- Items will be injected dynamically by JavaScript -->
+                        </tbody>
+                    </table>
+
+                    <!-- Empty State -->
+                    <div class="empty-cart-state" id="empty-cart-state">
+                        <div class="empty-icon">🛒</div>
+                        <p class="empty-title">Keranjang Belanja Masih Kosong</p>
+                        <p class="empty-desc">Silakan tambahkan barang dari form di sebelah kiri.</p>
+                    </div>
+                </div>
+
+                <!-- Calculation Summary Section -->
+                <div class="summary-section">
+                    <!-- Promo Code & Auto Discount Box -->
+                    <div class="discount-box">
+                        <div class="discount-info-badge" id="auto-discount-badge">
+                            <i class="fa-solid fa-gift"></i> Diskon Otomatis 10% jika belanja min. Rp 50.000
+                        </div>
+                        <div class="promo-input-group">
+                            <input type="text" id="promo-code" placeholder="Kode Promo (cth: HEMAT10)">
+                            <button type="button" class="btn-promo" id="btn-apply-promo">Gunakan</button>
+                        </div>
+                        <div id="promo-status-msg" class="promo-status"></div>
+                    </div>
+
+                    <!-- Totals Breakdown -->
+                    <div class="totals-breakdown">
+                        <div class="summary-row">
+                            <span>Subtotal Belanja:</span>
+                            <strong id="subtotal-val">Rp 0</strong>
+                        </div>
+                        <div class="summary-row discount-row" id="discount-row">
+                            <span>Potongan Diskon:</span>
+                            <strong id="discount-val">- Rp 0</strong>
+                        </div>
+                        <div class="summary-row grand-total-row">
+                            <span>Total Akhir:</span>
+                            <strong id="grand-total-val">Rp 0</strong>
+                        </div>
+                    </div>
+
+                    <!-- Payment Calculator Section -->
+                    <div class="payment-calculator">
+                        <h3><i class="fa-solid fa-wallet"></i> Perhitungan Uang & Kembalian</h3>
+                        
+                        <div class="payment-input-group">
+                            <label for="uang-bayar">Uang Bayar (Nominal Diterima):</label>
+                            <div class="input-currency-wrapper">
+                                <span class="currency-symbol">Rp</span>
+                                <input type="number" id="uang-bayar" placeholder="Masukkan jumlah uang" min="0" step="500">
+                            </div>
+                        </div>
+
+                        <!-- Quick Cash Suggestions -->
+                        <div class="quick-money-container">
+                            <span class="quick-label">Uang Cepat:</span>
+                            <div class="quick-buttons">
+                                <button type="button" class="btn-money" id="btn-money-exact">Uang Pas</button>
+                                <button type="button" class="btn-money" data-val="10000">10rb</button>
+                                <button type="button" class="btn-money" data-val="20000">20rb</button>
+                                <button type="button" class="btn-money" data-val="50000">50rb</button>
+                                <button type="button" class="btn-money" data-val="100000">100rb</button>
+                            </div>
+                        </div>
+
+                        <!-- Change Display Box -->
+                        <div class="change-status-box status-neutral" id="change-box">
+                            <span class="status-label" id="change-status-label">Status Kembalian:</span>
+                            <h4 class="change-amount" id="change-amount-val">Rp 0</h4>
+                            <p class="change-detail" id="change-detail-text">Masukkan nominal Uang Bayar terlebih dahulu.</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons Footer -->
+                    <div class="cart-actions-footer">
+                        <button type="button" class="btn-danger" id="btn-reset-cart">
+                            <i class="fa-solid fa-trash-arrow-up"></i> Transaksi Baru / Reset
+                        </button>
+                        <button type="button" class="btn-success" id="btn-checkout" disabled>
+                            <i class="fa-solid fa-receipt"></i> Selesaikan Transaksi
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Cute Footer -->
+        <footer class="app-footer">
+            <p>&copy; 2026 <strong>Mulya Delani (123140019)</strong> - Practical Assignment Web Development (RA) | Itera</p>
+        </footer>
+    </div>
+
+    <!-- Receipt Modal (Struk Belanja Popup) -->
+    <div class="modal-backdrop" id="receipt-modal">
+        <div class="receipt-card">
+            <div class="receipt-header">
+                <div class="receipt-logo">🌸 PINKY POS 🌸</div>
+                <p class="receipt-subtitle">Kantin Kampus ITERA</p>
+                <p class="receipt-date" id="receipt-datetime">00/00/0000 00:00</p>
+            </div>
+            
+            <div class="receipt-divider">--------------------------------</div>
+            <div class="receipt-info-meta">
+                <div>Kasir: <span id="receipt-cashier">Mulya Delani</span></div>
+                <div>NIM: 123140019 (RA)</div>
+            </div>
+            <div class="receipt-divider">--------------------------------</div>
+
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Harga</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="receipt-items-body">
+                    <!-- Receipt items loaded dynamically -->
+                </tbody>
+            </table>
+
+            <div class="receipt-divider">--------------------------------</div>
+
+            <div class="receipt-totals">
+                <div class="r-row"><span>Subtotal:</span> <span id="r-subtotal">Rp 0</span></div>
+                <div class="r-row" id="r-discount-row"><span>Diskon:</span> <span id="r-discount">- Rp 0</span></div>
+                <div class="r-row r-bold"><span>TOTAL:</span> <span id="r-total">Rp 0</span></div>
+                <div class="receipt-divider">--------------------------------</div>
+                <div class="r-row"><span>Bayar:</span> <span id="r-cash">Rp 0</span></div>
+                <div class="r-row"><span>Kembalian:</span> <span id="r-change">Rp 0</span></div>
+            </div>
+
+            <div class="receipt-divider">--------------------------------</div>
+            <div class="receipt-footer-text">
+                <p>✨ Terima Kasih Telah Berbelanja! ✨</p>
+                <p>Semoga Harimu Menyenangkan 💕</p>
+            </div>
+
+            <div class="receipt-actions">
+                <button type="button" class="btn-secondary" id="btn-close-receipt"><i class="fa-solid fa-xmark"></i> Tutup</button>
+                <button type="button" class="btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Cetak Struk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JS -->
+    <script src="script.js"></script>
+</body>
+</html>
