@@ -1,21 +1,8 @@
 # Pertemuan 3 — Aplikasi React
-
-Repository praktikum: **`pemrograman_web_itera_123140019`**  
-Folder tugas: **`MulyaDelani_123140019_pertemuan3`**
-
 Folder pertemuan ini berisi dua project React yang berdiri sendiri:
 
 1. Aplikasi utama **RakBuku**, untuk mencatat koleksi buku pribadi.
 2. **React Task Manager** di `modul/`, untuk latihan komponen, props, state, hooks, Context API, dan routing.
-
-## Persyaratan
-
-- Node.js dan npm telah terpasang. Periksa lewat terminal VS Code:
-
-  ```bash
-  node --version
-  npm --version
-  ```
 
 ## Menjalankan aplikasi utama RakBuku
 
