@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import Header from '../../components/Header/Header.jsx'
 import useTasks from '../../hooks/useTasks.js'
 

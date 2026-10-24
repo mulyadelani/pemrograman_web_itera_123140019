@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { TaskProvider } from './context/TaskContext.jsx'
 import Navbar from './components/Navbar/Navbar.jsx'

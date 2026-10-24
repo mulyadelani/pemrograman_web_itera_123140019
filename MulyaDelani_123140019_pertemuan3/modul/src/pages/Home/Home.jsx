@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
 import Header from '../../components/Header/Header.jsx'
 import TaskForm from '../../components/TaskForm/TaskForm.jsx'
 import TaskItem from '../../components/TaskItem/TaskItem.jsx'

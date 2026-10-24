@@ -1,76 +1,83 @@
-# RakBuku — Aplikasi Manajemen Buku Pribadi
+# Pertemuan 3 — Aplikasi React
 
-RakBuku adalah aplikasi katalog buku pribadi untuk mencatat buku yang sudah dimiliki, sedang dibaca, atau ingin dibeli. Koleksi tersimpan di `localStorage` browser, sehingga tetap tersedia saat aplikasi dibuka kembali pada browser dan perangkat yang sama.
+Repository praktikum: **`pemrograman_web_itera_123140019`**  
+Folder tugas: **`MulyaDelani_123140019_pertemuan3`**
 
-## Fitur
+Folder pertemuan ini berisi dua project React yang berdiri sendiri:
 
-- Tambah, edit, dan hapus buku.
-- Kategori status: **Sudah dimiliki**, **Sedang dibaca**, dan **Ingin dibeli**.
-- Filter status serta pencarian berdasarkan judul atau nama penulis.
-- Halaman statistik yang merangkum koleksi menurut status.
-- Validasi judul dan penulis dengan pesan kesalahan pada kolom yang belum diisi.
-- Tampilan responsif untuk layar desktop dan ponsel.
-- Tema pink lembut yang konsisten dengan project pertemuan sebelumnya.
+1. Aplikasi utama **RakBuku**, untuk mencatat koleksi buku pribadi.
+2. **React Task Manager** di `modul/`, untuk latihan komponen, props, state, hooks, Context API, dan routing.
 
-## Screenshot antarmuka
+## Persyaratan
 
-![Screenshot halaman perpustakaan RakBuku](./screenshot.png)
+- Node.js dan npm telah terpasang. Periksa lewat terminal VS Code:
 
-## Instalasi dan menjalankan
+  ```bash
+  node --version
+  npm --version
+  ```
 
-Pastikan Node.js dan npm tersedia, lalu jalankan perintah berikut dari folder project:
+## Menjalankan aplikasi utama RakBuku
+
+Buka folder `MulyaDelani_123140019_pertemuan3` di VS Code. Jalankan perintah berikut pada terminal terintegrasi:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Buka alamat lokal yang ditampilkan Vite (biasanya `http://localhost:5173`). Untuk membuat build produksi:
+Buka alamat lokal yang ditampilkan Vite, biasanya `http://localhost:5173`.
+
+## Menjalankan project latihan di folder modul
+
+Buka terminal baru dan pindah ke folder `modul` terlebih dahulu:
 
 ```bash
-npm run build
-npm run preview
+cd modul
+npm install
+npm run dev
 ```
 
-## Teknologi dan konsep React
+Buka alamat lokal yang ditampilkan. Jika aplikasi utama sedang berjalan, Vite dapat memilih port berikutnya (misalnya `5174`).
 
-- **React + Vite** untuk antarmuka single-page.
-- **Functional components dan Hooks:** `useState` mengelola pencarian, filter, dan form; `useEffect` menyimpan perubahan ke `localStorage`.
-- **Context API:** `BookProvider` dan `useBooks` berbagi koleksi dan aksi CRUD lintas halaman.
-- **React Router:** navigasi antara halaman **Perpustakaan** dan **Statistik**.
-- **Custom hooks:** `useLocalStorage` untuk persistensi lokal dan `useBookStats` untuk menghitung ringkasan status.
-- **Komponen reusable dengan PropTypes:** form, kartu/daftar buku, filter, header, halaman, dan provider.
-- **Testing:** Vitest dan React Testing Library menguji tampilan kosong, validasi, CRUD, pencarian, filter, persistensi, dan statistik.
+Jalankan tes atau build project modul dari folder `modul`:
 
-## Laporan pengujian
+```bash
+npm test
+npm run build
+```
 
-Jalankan unit test dengan:
+## RakBuku
+
+RakBuku mendukung tambah, edit, dan hapus buku; filter status; pencarian judul atau penulis; serta halaman statistik. Data disimpan di `localStorage` browser.
+
+![Screenshot halaman perpustakaan RakBuku](./screenshot.png)
+
+Unit test aplikasi utama:
 
 ```bash
 npm test
 ```
 
-Ringkasan hasil eksekusi terakhir di terminal:
+![Screenshot hasil unit test aplikasi utama](./test-results.png)
 
-![Screenshot hasil unit test Vitest](./test-results.png)
+## React Task Manager
+
+Project latihan lengkap beserta struktur komponen, latihan interaktif, petunjuk fitur, dan tes otomatis dijelaskan di [`modul/README.md`](./modul/README.md).
+
+## Isi folder
 
 ```text
-Test Files  1 passed (1)
-Tests       8 passed (8)
+MulyaDelani_123140019_pertemuan3/
+├── src/                  # Source aplikasi RakBuku
+├── modul/                # Project latihan React Task Manager mandiri
+├── screenshot.png        # Screenshot aplikasi RakBuku
+├── test-results.png      # Screenshot hasil tes RakBuku
+├── package.json          # Perintah dan dependensi RakBuku
+├── package-lock.json     # Versi dependensi RakBuku
+├── vite.config.js        # Konfigurasi Vite
+├── vitest.config.js      # Tes aplikasi utama (tidak mencakup modul)
+└── .gitignore            # Mengabaikan node_modules, dist, dan coverage
 ```
 
-Hasil verifikasi lainnya:
-
-| Pemeriksaan | Hasil |
-| --- | --- |
-| Unit test React Testing Library | 8 tes |
-| Production build | Berhasil |
-| Oxlint | Berhasil |
-
-## Catatan penyimpanan
-
-Data `localStorage` hanya tersedia di browser/perangkat yang digunakan dan tidak disinkronkan antarperangkat. Jika browser menolak penyimpanan, aplikasi menampilkan pemberitahuan agar perubahan tidak disangka sudah tersimpan.
-
-## Modul latihan React
-
-Project Task Manager untuk latihan Components & Props, State & Hooks, React Router, dan Context API tersedia secara terpisah di [`modul/`](./modul/). Baca [`modul/README.md`](./modul/README.md) untuk langkah instalasi dan menjalankannya.
+`node_modules/`, hasil build `dist/`, dan laporan coverage tidak perlu dikumpulkan; semuanya sudah tercantum di `.gitignore`, termasuk untuk project di `modul/`. File `package-lock.json` tetap disertakan agar versi dependensi dapat dipasang ulang secara konsisten.
